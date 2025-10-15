@@ -1,0 +1,21 @@
+import random
+
+def go_back_n():
+    total_frames = 5
+    window_size = 3
+    i = 0
+    print("\n--- Go-Back-N Protocol ---\n")
+
+    while i < total_frames:
+        print(f"Sending frames {i} to {min(i+window_size-1, total_frames-1)}")
+        lost = random.choice([True, False])  # randomly simulate frame loss
+
+        if lost:
+            print(f"❌ Frame {i} lost! Resending from frame {i}...\n")
+        else:
+            print(f"✅ Frames {i} to {min(i+window_size-1, total_frames-1)} received successfully!\n")
+            i += window_size
+
+    print("🎯 All frames sent successfully!\n")
+
+go_back_n()
