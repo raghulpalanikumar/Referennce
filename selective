@@ -1,0 +1,21 @@
+import random
+
+def selective_repeat():
+    total_frames = 5
+    received = [False]*total_frames
+    print("\n--- Selective Repeat Protocol ---\n")
+
+    while not all(received):
+        for i in range(total_frames):
+            if not received[i]:
+                lost = random.choice([True, False])
+                if lost:
+                    print(f"❌ Frame {i} lost! Will resend later.")
+                else:
+                    print(f"✅ Frame {i} received successfully!")
+                    received[i] = True
+        print()
+
+    print("🎯 All frames sent successfully!\n")
+
+selective_repeat()
