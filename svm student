@@ -1,0 +1,45 @@
+# 1️⃣ Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# 2️⃣ Load the dataset
+data = {
+    'StudentID': [101, 102, 103, 104, 105, 106, 107, 108],
+    'Hours_Study': [5, 10, 3, 8, 7, 2, 6, 4],
+    'Attendance': [60, 75, 50, 80, 65, 45, 70, 55],
+    'Result': ['Fail', 'Pass', 'Fail', 'Pass', 'Pass', 'Fail', 'Pass', 'Fail']
+}
+
+df = pd.DataFrame(data)
+
+# 3️⃣ Encode the target variable (Pass=1, Fail=0)
+df['Result'] = df['Result'].map({'Fail': 0, 'Pass': 1})
+
+# 4️⃣ Split features and target
+X = df[['Hours_Study', 'Attendance']]
+y = df['Result']
+
+# 5️⃣ Split dataset into training and test sets (70% train, 30% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# 6️⃣ Train Support Vector Machine (SVM) classifier
+svm_model = SVC(kernel='linear')  # linear kernel
+svm_model.fit(X_train, y_train)
+
+# 7️⃣ Predict results for test set
+y_pred = svm_model.predict(X_test)
+
+# 8️⃣ Evaluate the classifier
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+# 9️⃣ Print results
+print("Predicted results for test set:", y_pred)
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1-score:", f1)
