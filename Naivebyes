@@ -1,0 +1,40 @@
+import pandas as pd
+from sklearn.naive_bayes import CategoricalNB
+from sklearn.preprocessing import LabelEncoder
+
+# 1️⃣ Dataset
+data = {
+    'Outlook': ['Sunny','Sunny','Overcast','Rainy','Rainy','Rainy','Overcast','Sunny','Sunny','Rainy','Sunny','Overcast','Overcast','Rainy'],
+    'Temperature': ['Hot','Hot','Hot','Mild','Cool','Cool','Cool','Mild','Cool','Mild','Mild','Mild','Hot','Mild'],
+    'Humidity': ['High','High','High','High','Normal','Normal','Normal','High','Normal','Normal','Normal','High','Normal','High'],
+    'Windy': [False, True, False, False, False, True, True, False, False, False, True, True, False, True],
+    'Play': ['No','No','Yes','Yes','Yes','No','Yes','No','Yes','Yes','Yes','Yes','Yes','No']
+}
+
+df = pd.DataFrame(data)
+
+# 2️⃣ Convert text data to numbers
+le = LabelEncoder()
+for col in df.columns:
+    df[col] = le.fit_transform(df[col])
+
+# 3️⃣ Split features and target
+X = df[['Outlook','Temperature','Humidity','Windy']]
+y = df['Play']
+
+# 4️⃣ Train the Naive Bayes model
+model = CategoricalNB()
+model.fit(X, y)
+
+# 5️⃣ Predict for given input:
+# Outlook=Rainy, Temperature=Cool, Humidity=Normal, Windy=True
+sample = [[le.transform(['Rainy'])[0], 
+           le.transform(['Cool'])[0],
+           le.transform(['Normal'])[0], 
+           le.transform([True])[0]]]
+
+prediction = model.predict(sample)
+
+# 6️⃣ Decode result
+result = le.inverse_transform(prediction)
+print("Prediction:", result[0])
