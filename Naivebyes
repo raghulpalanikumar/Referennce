@@ -1,8 +1,8 @@
-import pandas as pd
+# Simple Naive Bayes for Play Tennis
 from sklearn.naive_bayes import CategoricalNB
-from sklearn.preprocessing import LabelEncoder
+import pandas as pd
 
-# 1️⃣ Dataset
+# Dataset
 data = {
     'Outlook': ['Sunny','Sunny','Overcast','Rainy','Rainy','Rainy','Overcast','Sunny','Sunny','Rainy','Sunny','Overcast','Overcast','Rainy'],
     'Temperature': ['Hot','Hot','Hot','Mild','Cool','Cool','Cool','Mild','Cool','Mild','Mild','Mild','Hot','Mild'],
@@ -13,28 +13,22 @@ data = {
 
 df = pd.DataFrame(data)
 
-# 2️⃣ Convert text data to numbers
-le = LabelEncoder()
-for col in df.columns:
-    df[col] = le.fit_transform(df[col])
+# Convert categorical text to numbers
+for col in ['Outlook','Temperature','Humidity','Windy','Play']:
+    df[col] = df[col].astype('category').cat.codes
 
-# 3️⃣ Split features and target
+# Features and target
 X = df[['Outlook','Temperature','Humidity','Windy']]
 y = df['Play']
 
-# 4️⃣ Train the Naive Bayes model
+# Train Naive Bayes
 model = CategoricalNB()
 model.fit(X, y)
 
-# 5️⃣ Predict for given input:
-# Outlook=Rainy, Temperature=Cool, Humidity=Normal, Windy=True
-sample = [[le.transform(['Rainy'])[0], 
-           le.transform(['Cool'])[0],
-           le.transform(['Normal'])[0], 
-           le.transform([True])[0]]]
+# Predict: Outlook=Rainy, Temperature=Cool, Humidity=Normal, Windy=True
+sample = [[df['Outlook'][3], df['Temperature'][5], df['Humidity'][5], df['Windy'][5]]]
 
 prediction = model.predict(sample)
 
-# 6️⃣ Decode result
-result = le.inverse_transform(prediction)
-print("Prediction:", result[0])
+# Print result
+print("Prediction (0=No,1=Yes):", prediction[0])
