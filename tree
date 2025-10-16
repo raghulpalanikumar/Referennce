@@ -1,0 +1,41 @@
+# 1️⃣ Import libraries
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+# 2️⃣ Create dataset
+data = {
+    'Patient': ['Small','Medium','Senior','Small','Small','Senior','Medium','Senior','Medium','Medium','Senior'],
+    'Disease': ['Serious','Normal','Lifetime','Lifetime','Normal','Serious','Serious','Normal','Lifetime','Serious','Normal'],
+    'Sugar': ['High','Low','Normal','High','High','Normal','Low','Low','Normal','High','High'],
+    'Survival': ['Yes','Yes','Yes','No','Yes','No','Yes','No','Yes','No','Yes']
+}
+
+df = pd.DataFrame(data)
+
+# 3️⃣ Convert categorical features to numbers automatically
+X = pd.get_dummies(df[['Patient','Disease','Sugar']])
+y = df['Survival']
+
+# 4️⃣ Train Decision Tree
+model = DecisionTreeClassifier()
+model.fit(X, y)
+
+# 5️⃣ Predict for a sample patient
+sample = pd.DataFrame({
+    'Patient_Small': [1], 'Patient_Medium': [0], 'Patient_Senior': [0],
+    'Disease_Lifetime': [0], 'Disease_Normal': [0], 'Disease_Serious': [1],
+    'Sugar_High': [1], 'Sugar_Low': [0], 'Sugar_Normal': [0]
+})
+
+# ✅ Reindex sample to match training columns
+sample = sample.reindex(columns=X.columns, fill_value=0)
+
+prediction = model.predict(sample)
+print("Prediction for sample patient:", prediction[0])
+
+# 6️⃣ Visualize the tree
+plt.figure(figsize=(12,8))
+tree.plot_tree(model, feature_names=X.columns, class_names=['No','Yes'], filled=True)
+plt.show()
