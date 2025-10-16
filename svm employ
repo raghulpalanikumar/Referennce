@@ -1,0 +1,45 @@
+# 1️⃣ Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# 2️⃣ Load the dataset
+data = {
+    'EmployeeID': [101, 102, 103, 104, 105, 106, 107, 108],
+    'Experience': [2, 5, 1, 7, 4, 3, 6, 2],  # in years
+    'Performance': [70, 85, 60, 90, 75, 65, 88, 72],  # monthly score
+    'Promoted': ['No', 'Yes', 'No', 'Yes', 'Yes', 'No', 'Yes', 'No']
+}
+
+df = pd.DataFrame(data)
+
+# 3️⃣ Encode target variable (Yes=1, No=0)
+df['Promoted'] = df['Promoted'].map({'No': 0, 'Yes': 1})
+
+# 4️⃣ Split features and target
+X = df[['Experience', 'Performance']]
+y = df['Promoted']
+
+# 5️⃣ Split dataset into training and test sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 6️⃣ Train SVM classifier
+svm_model = SVC(kernel='linear')  # linear kernel
+svm_model.fit(X_train, y_train)
+
+# 7️⃣ Predict test results
+y_pred = svm_model.predict(X_test)
+
+# 8️⃣ Evaluate the classifier
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+# 9️⃣ Print results
+print("Predicted results for test set:", y_pred)
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1-score:", f1)
